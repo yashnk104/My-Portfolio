@@ -22,12 +22,29 @@ jobs:
         run: npm ci
 
       - name: Build project for GitHub Pages (static site)
-        run: npm run build
-        env:
-          BASE_URL: /${{ github.event.repository.name }}
+        run: |
+          # Set the base URL for GitHub Pages
+          export BASE_URL="/${{ github.event.repository.name }}"
+          
+          # Add environment variables for the build
+          echo "VITE_BASE_URL=$BASE_URL" > client/.env.production
+          
+          # Run the build
+          npm run build
+          
+      - name: Prepare for GitHub Pages
+        run: |
+          # Copy .nojekyll file
+          cp public/.nojekyll dist/public/
+          
+          # Create a CNAME file if you have a custom domain
+          # echo "your-domain.com" > dist/public/CNAME
+          
+          # Make sure 404.html is in the output directory
+          cp public/404.html dist/public/
 
       - name: Deploy to GitHub Pages
         uses: JamesIves/github-pages-deploy-action@v4
         with:
-          folder: dist
+          folder: dist/public
           branch: gh-pages

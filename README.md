@@ -30,18 +30,50 @@ npm install
 npm run dev
 ```
 
-## Deployment
+## Deployment to GitHub Pages
 
 This website is configured to automatically deploy to GitHub Pages using GitHub Actions. When changes are pushed to the main branch, the site will automatically build and deploy.
 
-To set up manual deployment:
+### Automated Deployment with GitHub Actions
 
-1. Build the project:
+The project includes a GitHub Actions workflow that will:
+1. Build the project with the correct base path for GitHub Pages
+2. Copy necessary files like `.nojekyll` and `404.html`
+3. Deploy the built files to the `gh-pages` branch
+
+### Setting Up GitHub Pages
+
+1. In your GitHub repository, go to Settings > Pages
+2. Set the source to deploy from the `gh-pages` branch
+3. The site will be published at `https://yourusername.github.io/repository-name/`
+
+### Troubleshooting GitHub Pages Deployment
+
+If you encounter a "File not found" error:
+1. Ensure the GitHub Actions workflow executed successfully
+2. Check that the `gh-pages` branch contains the expected files
+3. Verify the repository's GitHub Pages settings are correct
+4. The `.nojekyll` file is included in the deployment to prevent Jekyll processing issues
+5. The `404.html` file handles client-side routing
+
+### Manual Deployment Steps
+
+If you need to manually deploy:
+
+1. Build the project with the correct base path:
    ```bash
+   export BASE_URL="/<repository-name>"
+   echo "VITE_BASE_URL=$BASE_URL" > client/.env.production
    npm run build
    ```
 
-2. The build output will be in the `dist` directory, which can be deployed to any static site hosting service.
+2. Copy the special GitHub Pages files:
+   ```bash
+   cp public/.nojekyll dist/public/
+   cp public/404.html dist/public/
+   ```
+
+3. Deploy the contents of the `dist/public` directory to your hosting service
 
 ## Project Structure
 

@@ -10,21 +10,20 @@ import Admin from "@/pages/Admin";
 import NotFound from "@/pages/not-found";
 
 function Router() {
+  // For analytics tracking
   useEffect(() => {
-    // Track page changes
     const handleLocationChange = () => {
       if (import.meta.env.VITE_GA_TRACKING_ID) {
         ReactGA.send({ hitType: "pageview", page: window.location.pathname });
       }
     };
 
-    // Listen for history changes
     window.addEventListener('popstate', handleLocationChange);
-    
-    return () => {
-      window.removeEventListener('popstate', handleLocationChange);
-    };
+    return () => window.removeEventListener('popstate', handleLocationChange);
   }, []);
+
+  // For GitHub Pages compatibility, we'll use a simpler approach
+  // Instead of complex routing, we'll just modify paths in components as needed
   
   return (
     <Switch>
